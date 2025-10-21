@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pechay AR Growth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- A-Frame + AR.js -->
+  <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
+  <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/2.0.0/aframe/build/aframe-ar.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: white;
+    }
+    #ui {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      padding: 10px;
+      color: black;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    #slider {
+      width: 150px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Day Slider UI -->
+  <div id="ui">
+    🌿 <label for="slider">Day:</label>
+    <input type="range" id="slider" min="1" max="365" value="1" />
+    <span id="dayValue">1</span>
+  </div>
+
+  <!-- AR Scene -->
+  <a-scene embedded arjs="sourceType: webcam;">
+    <a-marker preset="hiro">
+      <!-- Pechay 3D Model -->
+      <a-entity id="pechayModel" gltf-model="pechay.glb" position="0 0 0" scale="0.05 0.05 0.05"></a-entity>
+    </a-marker>
+    <a-entity camera></a-entity>
+  </a-scene>
+
+  <script>
+    const slider = document.getElementById('slider');
+    const dayValue = document.getElementById('dayValue');
+    const pechayModel = document.getElementById('pechayModel');
+
+    slider.addEventListener('input', () => {
+      const day = parseInt(slider.value);
+      dayValue.textContent = day;
+
+      // Simple AR Growth Logic (adjust as needed)
+      const growthScale = 0.05 + (day / 365) * 0.25; // from small seedling to mature
+      const greenShade = Math.min(255, 100 + day / 2);
+
+      // Apply transformations
+      pechayModel.setAttribute('scale', `${growthScale} ${growthScale} ${growthScale}`);
+      pechayModel.setAttribute('material', `color: rgb(0, ${greenShade}, 0)`);
+
+      console.log(`Day ${day} → Growth Scale: ${growthScale.toFixed(3)} | Green: ${greenShade}`);
+    });
+  </script>
+</body>
+</html>
